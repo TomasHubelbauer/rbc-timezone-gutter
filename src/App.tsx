@@ -137,7 +137,7 @@ export default class App extends Component<{}, AppState> {
     void tz;
     return (
       <>
-        <BigCalendar localizer={App.localizer} events={App.events} components={this.components} defaultView="week" />
+        <BigCalendar localizer={App.localizer} events={App.events} components={this.components} defaultView="week" scrollToTime={new Date()} />
         {this.state.modal && createPortal(this.renderSwitchModal(), document.body)}
       </>
     );

@@ -28,9 +28,19 @@
   opacity: 1;
 }
 
+body {
+  /* Avoid scrollbar when setting calendar height to viewport height */
+  margin: 0;
+}
+
 /* Note that `body` here is to beat the RBC stylesheet rule specificity */
 body .rbc-time-header-gutter {
   font-size: 8pt;
+}
+
+/* Note that `body` here is to beat the RBC stylesheet rule specificity */
+body .rbc-calendar {
+  height: 100vh;
 }
 
 .modal {
