@@ -1,0 +1,48 @@
+.gutterSplit {
+  display: flex;
+}
+
+.gutterSplit span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0 1ex;
+  text-align: center;
+}
+
+.gutterSplit span > * {
+  margin: .5ex auto;
+}
+
+.infoIcon {
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: help;
+  font-family: serif;
+  font-size: 7pt;
+  font-weight: bold;
+  opacity: .25;
+}
+
+.infoIcon:hover {
+  opacity: 1;
+}
+
+/* Note that `body` here is to beat the RBC stylesheet rule specificity */
+body .rbc-time-header-gutter {
+  font-size: 8pt;
+}
+
+.modal {
+  box-shadow: 0 0 10px 1px black;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 40vh;
+  overflow: auto;
+  padding: 1em;
+  position: fixed;
+  left: 40vw;
+  top: 20vh;
+  right: 40vw;
+}
