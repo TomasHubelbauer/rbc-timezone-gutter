@@ -92,3 +92,6 @@ From here on we add a few niceties like a button for switching the time zone of
 each gutter and we're done.
 
 [**Online demo**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
+
+- [ ] Attach a screenshot to the README
+- [ ] Make the calendar scrollable by settings its height to the viewport height
