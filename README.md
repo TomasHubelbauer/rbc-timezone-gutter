@@ -2,6 +2,8 @@
 
 [**Online demo**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
 
+![](screenshot.png)
+
 In a project I am contributing to, a calendar component is a significant portion
 of the core functionality with many flows revolving around it. The application
 has a worldwide audience, so naturally, timezone support is an important aspect
@@ -92,6 +94,3 @@ From here on we add a few niceties like a button for switching the time zone of
 each gutter and we're done.
 
 [**Online demo**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
-
-- [ ] Attach a screenshot to the README
-- [ ] Make the calendar scrollable by settings its height to the viewport height
