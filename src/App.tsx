@@ -41,13 +41,13 @@ export default class App extends Component<{}, AppState> {
         <div className="gutterSplit rbc-time-header-gutter">
           <span>
             <span>{this.state.leftTimeZone.abbr(Date.now())}</span>
-            <span>{this.renderUtcOffset(this.state.leftTimeZone)}</span>
+            <span>{this.getVulgarUtcOffsetText(this.state.leftTimeZone.utcOffset(Date.now()))}</span>
             <span className="infoIcon" title={this.state.leftTimeZone.name}>i</span>
             <button onClick={this.handleSwitchLeftTimeZoneButtonClick}>…</button>
           </span>
           <span>
             <span>{this.state.rightTimeZone.abbr(Date.now())}</span>
-            <span>{this.renderUtcOffset(this.state.rightTimeZone)}</span>
+            <span>{this.getVulgarUtcOffsetText(this.state.rightTimeZone.utcOffset(Date.now()))}</span>
             <span className="infoIcon" title={this.state.rightTimeZone.name}>i</span>
             <button onClick={this.handleSwitchRightTimeZoneButtonClick}>…</button>
           </span>
@@ -76,8 +76,7 @@ export default class App extends Component<{}, AppState> {
     },
   };
 
-  private renderUtcOffset(zone: MomentZone) {
-    const offsetMinutes = zone.utcOffset(Date.now());
+  private getVulgarUtcOffsetText(offsetMinutes: number) {
     const offsetSign = ['+', '', '-'][Math.sign(offsetMinutes / 60) + 1 /* Convert sign -1 | 0 | 1 to index 0 | 1 | 2 */];
     const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
     let offsetHoursFraction = (Math.abs(offsetMinutes / 60) % 1).toFixed(2).substring(1) /* Discard 0 leaving fraction */;
@@ -93,6 +92,12 @@ export default class App extends Component<{}, AppState> {
     return `UTC${offsetSign}${offsetHours || ''}${offsetHoursFraction}`;
   }
 
+  private getFractionalUtcOffsetText(offsetMinutes: number) {
+    const offsetSign = ['+', '', '-'][Math.sign(offsetMinutes / 60) + 1 /* Convert sign -1 | 0 | 1 to index 0 | 1 | 2 */];
+    const offsetFraction = offsetMinutes / 60; // 0.5
+    return `UTC${offsetSign}${offsetFraction}`;
+  }
+
   private renderSwitchModal() {
     if (this.state.modal === null) {
       throw new Error('Invalid state');
@@ -105,15 +110,24 @@ export default class App extends Component<{}, AppState> {
     }
 
     const search = this.state.modal.search;
-    const results = moment.tz.names().filter(n => n.toUpperCase().includes(search.toUpperCase()));
+    const results = moment.tz.names()
+      .map(n => moment.tz.zone(n)!)
+      .map(tz => ({ name: tz.name, offsetMinutes: tz.utcOffset(Date.now()) }))
+      .map(tz => ({ name: tz.name, vulgarOffset: this.getVulgarUtcOffsetText(tz.offsetMinutes), fractionalOffset: this.getFractionalUtcOffsetText(tz.offsetMinutes) }))
+
+      // Search the time zone name, vulgar offset and fractional offset to be able to search all time zones with a given offset
+      .filter(tz => (tz.name.toUpperCase() + ' ' + tz.vulgarOffset + ' ' + tz.fractionalOffset).includes(search.toUpperCase()));
+
     return (
       <div className="modal">
-        Switch the {this.state.modal.side} time zone to:
-        <input value={this.state.modal.search} onChange={this.handleSwitchTimeZoneSearchInputChange} />
+        <div>
+          Change the {this.state.modal.side} time zone
+          <button title="Close" onClick={this.handleCloseModalButtonClick}>✕</button>
+        </div>
+        <input value={this.state.modal.search} onChange={this.handleSwitchTimeZoneSearchInputChange} placeholder="Search: 'prague', '-2', '.75', …" ref={n => n && n.focus()} />
         <select value={value} onChange={this.handleSwitchTimeZoneSelectChange} size={20}>
-          {results.map(n => <option value={n} key={n}>{n} {this.renderUtcOffset(moment.tz.zone(n)!)}</option>)}
+          {results.map(tz => <option value={tz.name} key={tz.name}>{tz.name} {tz.vulgarOffset}</option>)}
         </select>
-        <button onClick={this.handleCloseModalButtonClick}>Close</button>
       </div>
     );
   }

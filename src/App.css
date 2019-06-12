@@ -44,7 +44,8 @@ body .rbc-calendar {
 }
 
 .modal {
-  box-shadow: 0 0 10px 1px black;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, .25);
+  border-radius: .25em;
   background: white;
   display: flex;
   flex-direction: column;
@@ -55,4 +56,21 @@ body .rbc-calendar {
   left: 40vw;
   top: 20vh;
   right: 40vw;
+
+  /* Beat the RBC current time indicator line */
+  z-index: 10;
+}
+
+.modal div {
+  align-items: center;
+  display: flex;
+  font-weight: bold;
+}
+
+.modal div button {
+  margin-left: auto;
+}
+
+.modal input {
+  margin: 1ex 0;
 }
