@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom';
 type AppState = {
   leftTimeZone: MomentZone;
   rightTimeZone: MomentZone;
-  modal: 'left' | 'right' | null;
+  modal: null | { side: 'left' | 'right'; search: string; };
 };
 
 export default class App extends Component<{}, AppState> {
@@ -30,7 +30,7 @@ export default class App extends Component<{}, AppState> {
     {
       title: 'Now for an hour',
       start: moment().toDate(),
-      end: moment().add('hour', 1).toDate(),
+      end: moment().add(1, 'hour').toDate(),
     }
   ];
 
@@ -81,6 +81,7 @@ export default class App extends Component<{}, AppState> {
     const offsetSign = ['+', '', '-'][Math.sign(offsetMinutes / 60) + 1 /* Convert sign -1 | 0 | 1 to index 0 | 1 | 2 */];
     const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
     let offsetHoursFraction = (Math.abs(offsetMinutes / 60) % 1).toFixed(2).substring(1) /* Discard 0 leaving fraction */;
+
     // http://unicodefractions.com/
     switch (offsetHoursFraction) {
       case '.00': offsetHoursFraction = ''; break;
@@ -93,17 +94,24 @@ export default class App extends Component<{}, AppState> {
   }
 
   private renderSwitchModal() {
+    if (this.state.modal === null) {
+      throw new Error('Invalid state');
+    }
+
     let value = '';
-    switch (this.state.modal) {
+    switch (this.state.modal.side) {
       case 'left': value = this.state.leftTimeZone.name; break;
       case 'right': value = this.state.rightTimeZone.name; break;
     }
 
+    const search = this.state.modal.search;
+    const results = moment.tz.names().filter(n => n.toUpperCase().includes(search.toUpperCase()));
     return (
       <div className="modal">
-        Switch the {this.state.modal} time zone to:
+        Switch the {this.state.modal.side} time zone to:
+        <input value={this.state.modal.search} onChange={this.handleSwitchTimeZoneSearchInputChange} />
         <select value={value} onChange={this.handleSwitchTimeZoneSelectChange} size={20}>
-          {moment.tz.names().map(n => <option value={n}>{n} {this.renderUtcOffset(moment.tz.zone(n)!)}</option>)}
+          {results.map(n => <option value={n} key={n}>{n} {this.renderUtcOffset(moment.tz.zone(n)!)}</option>)}
         </select>
         <button onClick={this.handleCloseModalButtonClick}>Close</button>
       </div>
@@ -111,16 +119,31 @@ export default class App extends Component<{}, AppState> {
   }
 
   private readonly handleSwitchLeftTimeZoneButtonClick = () => {
-    this.setState({ modal: 'left' });
+    this.setState({ modal: { side: 'left', search: '' } });
   };
 
   private readonly handleSwitchRightTimeZoneButtonClick = () => {
-    this.setState({ modal: 'right' });
+    this.setState({ modal: { side: 'right', search: '' } });
+  };
+
+  private readonly handleSwitchTimeZoneSearchInputChange: ChangeEventHandler<HTMLInputElement> = event => {
+    const search = event.currentTarget.value;
+    this.setState(state => {
+      if (state.modal === null) {
+        throw new Error('Invalid state');
+      }
+
+      return { modal: { ...state.modal, search } };
+    });
   };
 
   private readonly handleSwitchTimeZoneSelectChange: ChangeEventHandler<HTMLSelectElement> = event => {
+    if (this.state.modal === null) {
+      throw new Error('Invalid state');
+    }
+
     const tz = moment.tz.zone(event.currentTarget.value)!;
-    switch (this.state.modal) {
+    switch (this.state.modal.side) {
       case 'left': this.setState({ leftTimeZone: tz, modal: null }); return;
       case 'right': this.setState({ rightTimeZone: tz, modal: null }); return;
     }
