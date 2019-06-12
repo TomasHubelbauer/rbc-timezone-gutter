@@ -94,5 +94,3 @@ From here on we add a few niceties like a button for switching the time zone of
 each gutter and we're done.
 
 [**Online demo**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
-
-- [ ] Fix the deprecated use of `add`
