@@ -1,6 +1,8 @@
 # React Big Calendar Timezone Gutter
 
-[**Online demo**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
+[**LIVE**](https://tomashubelbauer.github.io/rbc-timezone-gutter)
+
+![](https://github.com/tomashubelbauer/rbc-timezone-gutter/workflows/github-pages/badge.svg)
 
 ![](screenshot.png)
 
