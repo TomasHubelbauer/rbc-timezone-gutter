@@ -14,8 +14,8 @@ type AppState = {
 
 export default class App extends Component<{}, AppState> {
   public readonly state: AppState = {
-    leftTimeZone: moment.tz.zone('America/New_York')!,
-    rightTimeZone: moment.tz.zone('Europe/Prague')!,
+    leftTimeZone: moment.tz.zone(localStorage.getItem('left') || 'America/New_York')!,
+    rightTimeZone: moment.tz.zone(localStorage.getItem('right') || 'Europe/Prague')!,
     modal: null,
   };
 
@@ -158,8 +158,16 @@ export default class App extends Component<{}, AppState> {
 
     const tz = moment.tz.zone(event.currentTarget.value)!;
     switch (this.state.modal.side) {
-      case 'left': this.setState({ leftTimeZone: tz, modal: null }); return;
-      case 'right': this.setState({ rightTimeZone: tz, modal: null }); return;
+      case 'left': {
+        this.setState({ leftTimeZone: tz, modal: null });
+        localStorage.setItem('left', event.currentTarget.value);
+        return;
+      }
+      case 'right': {
+        this.setState({ rightTimeZone: tz, modal: null });
+        localStorage.setItem('right', event.currentTarget.value);
+        return;
+      }
     }
 
     throw new Error('Called in an invalid state.');
