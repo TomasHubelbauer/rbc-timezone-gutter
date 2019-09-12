@@ -25,6 +25,9 @@ jobs:
         mv build docs
         # Add generated GitHub Pages to Git stage
         git add docs
+        # Capture the current screenshot
+        npm run screenshot
+        git add screenshot.png
         # Reset unstaged changes to prevent `git commit` from yelling if there's changes outside of `docs`
         git checkout -- .
         # Commit the changes to the Git repository to deploy GitHub Pages (if any)
