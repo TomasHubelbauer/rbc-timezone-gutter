@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/rbc-timezone-gutter/precache-manifest.b7f4a21f545db3ab9912b4dc9833e32b.js"
+  "/rbc-timezone-gutter/precache-manifest.a30c460c62dede3f22b29bd6abfab494.js"
 );
 
 self.addEventListener('message', (event) => {
