@@ -105,12 +105,6 @@ export default class App extends Component<{}, AppState> {
       throw new Error('Invalid state');
     }
 
-    let value = '';
-    switch (this.state.modal.side) {
-      case 'left': value = this.state.leftTimeZone.name; break;
-      case 'right': value = this.state.rightTimeZone.name; break;
-    }
-
     const search = this.state.modal.search;
     const results = moment.tz.names()
       .map(n => moment.tz.zone(n)!)
@@ -127,7 +121,7 @@ export default class App extends Component<{}, AppState> {
           <button title="Close" onClick={this.handleCloseModalButtonClick}>✕</button>
         </div>
         <input value={this.state.modal.search} onChange={this.handleSwitchTimeZoneSearchInputChange} placeholder="Search: 'prague', '-2', '.75', …" ref={n => n && n.focus()} />
-        <select value={value} onChange={this.handleSwitchTimeZoneSelectChange} size={20}>
+        <select onChange={this.handleSwitchTimeZoneSelectChange} size={20}>
           {results.map(tz => <option value={tz.name} key={tz.name}>{tz.name} {tz.vulgarOffset}</option>)}
         </select>
       </div>
