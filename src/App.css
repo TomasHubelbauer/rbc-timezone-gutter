@@ -2,7 +2,8 @@
   display: flex;
 }
 
-.gutterSplit span {
+.gutterSplit > span {
+  justify-content: flex-end;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -10,22 +11,20 @@
   text-align: center;
 }
 
-.gutterSplit span > * {
+.gutterSplit > span > * {
   margin: .5ex auto;
 }
 
-.infoIcon {
-  border: 1px solid black;
-  border-radius: 50%;
-  cursor: help;
-  font-family: serif;
-  font-size: 7pt;
-  font-weight: bold;
-  opacity: .25;
+.gutterSplit > span > span {
+  white-space: pre;
 }
 
-.infoIcon:hover {
-  opacity: 1;
+.gutterSplit > span > span[title] {
+  cursor: pointer;
+}
+
+.gutterSplit > span > button {
+  cursor: pointer;
 }
 
 body {

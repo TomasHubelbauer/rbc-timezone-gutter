@@ -1,6 +1,6 @@
 import './App.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import React, { Component, ReactElement, ChangeEventHandler } from 'react';
+import React, { Component, ReactElement, ChangeEventHandler, MouseEventHandler } from 'react';
 import BigCalendar, { Components } from 'react-big-calendar';
 import moment, { MomentZone } from 'moment';
 import tz from 'moment-timezone';
@@ -40,16 +40,15 @@ export default class App extends Component<{}, AppState> {
         // Note that `rbc-time-header-gutter` is to have the header dynamically strethed to match the width of the gutter by RBC
         <div className="gutterSplit rbc-time-header-gutter">
           <span>
-            <span>{this.state.leftTimeZone.abbr(Date.now())}</span>
-            <span>{this.getVulgarUtcOffsetText(this.state.leftTimeZone.utcOffset(Date.now()))}</span>
-            <span className="infoIcon" title={this.state.leftTimeZone.name}>i</span>
+            <span title={this.state.leftTimeZone.name} onClick={this.handleIconSpanClick}>{this.getVulgarUtcOffsetText(this.state.leftTimeZone.utcOffset(Date.now()))}</span>
             <button onClick={this.handleSwitchLeftTimeZoneButtonClick}>…</button>
+            <span>{this.state.leftTimeZone.abbr(Date.now())}</span>
           </span>
+          <span>UTC</span>
           <span>
-            <span>{this.state.rightTimeZone.abbr(Date.now())}</span>
-            <span>{this.getVulgarUtcOffsetText(this.state.rightTimeZone.utcOffset(Date.now()))}</span>
-            <span className="infoIcon" title={this.state.rightTimeZone.name}>i</span>
+            <span title={this.state.rightTimeZone.name} onClick={this.handleIconSpanClick}>{this.getVulgarUtcOffsetText(this.state.rightTimeZone.utcOffset(Date.now()))}</span>
             <button onClick={this.handleSwitchRightTimeZoneButtonClick}>…</button>
+            <span>{this.state.rightTimeZone.abbr(Date.now())}</span>
           </span>
         </div>
       );
@@ -64,6 +63,9 @@ export default class App extends Component<{}, AppState> {
           <div className="gutterSplit rbc-time-slot">
             <span title={dateAndTimeTzLeft.format()}>
               {dateAndTimeTzLeft.format('HH:mm A')}
+            </span>
+            <span title={dateAndTimeUtc.format()}>
+              {dateAndTimeUtc.format('HH:mm A')}
             </span>
             <span title={dateAndTimeTzRight.format()}>
               {dateAndTimeTzRight.format('HH:mm A')}
@@ -132,6 +134,10 @@ export default class App extends Component<{}, AppState> {
     );
   }
 
+  private readonly handleIconSpanClick: MouseEventHandler<HTMLSpanElement> = event => {
+    alert(event.currentTarget.title);
+  };
+
   private readonly handleSwitchLeftTimeZoneButtonClick = () => {
     this.setState({ modal: { side: 'left', search: '' } });
   };
@@ -169,7 +175,7 @@ export default class App extends Component<{}, AppState> {
     this.setState({ modal: null });
   }
 
-  render() {
+  public render() {
     // Note that a reference to `tz` needs to be kept otherwise it gets compiled away even though it is needed for `moment.tz`
     void tz;
     return (
