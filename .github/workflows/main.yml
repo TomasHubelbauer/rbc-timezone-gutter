@@ -39,5 +39,3 @@ jobs:
         git pull --rebase
         # Push the changes to GitHub where it will cause another workflow which will kill itself immediately due to ***NO_CI***
         git push
-        # Enqueue a GitHub Pages deployment using the API with the custom PAT
-        curl -f -X POST -H "Authorization: token ${{secrets.GITHUB_PAGES_PAT}}" -H "Accept: application/vnd.github.mister-fantastic-preview+json" "${{github.api_url}}/repos/${{github.repository}}/pages/builds"
